@@ -15,6 +15,8 @@
     "@types/react": "~18.3.12",
     "expo": "~52.0.39",
     "expo-constants": "~17.0.8",
+    "expo-font": "~13.0.4",
+    "expo-google-fonts-sour-gummy": "^0.3.0",
     "expo-router": "~4.0.19",
     "expo-status-bar": "~2.0.1",
     "nativewind": "^4.1.23",
