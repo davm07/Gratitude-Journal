@@ -13,11 +13,15 @@
     "@expo/metro-runtime": "~4.0.1",
     "@expo/vector-icons": "^14.0.4",
     "@types/react": "~18.3.12",
-    "expo": "~52.0.39",
+    "babel-plugin-inline-import": "^3.0.0",
+    "drizzle-orm": "^0.41.0",
+    "expo": "~52.0.41",
     "expo-constants": "~17.0.8",
+    "expo-drizzle-studio-plugin": "^0.1.2",
     "expo-font": "~13.0.4",
     "expo-google-fonts-sour-gummy": "^0.3.0",
     "expo-router": "~4.0.19",
+    "expo-sqlite": "~15.1.3",
     "expo-status-bar": "~2.0.1",
     "nativewind": "^4.1.23",
     "react": "18.3.1",
@@ -33,11 +37,15 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "drizzle-kit": "^0.30.6",
     "eslint": "^8.57.1",
     "eslint-config-expo": "~8.0.1",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.3",
     "prettier": "^3.5.3"
+  },
+  "overrides": {
+    "esbuild": "0.25.1"
   },
   "private": true
 }

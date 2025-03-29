@@ -1,23 +1,22 @@
-import { Screen } from "@/components/Screen";
-import { useLocalSearchParams, Stack } from "expo-router";
-import { View, StyleSheet, Pressable, Text } from "react-native";
 import { EntryInput } from "@/components/EntryInput";
-import { useEffect, useState } from "react";
+import { Screen } from "@/components/Screen";
+import { useState } from "react";
+import { Stack } from "expo-router";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { formatDate } from "@/lib/date";
+import { addEntry } from "@/lib/entries";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useSQLiteContext } from "expo-sqlite";
-import * as schema from "@/db/schema";
-import { getEntry, updateEntry } from "@/lib/entries";
-import { formatDate } from "@/lib/date";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
 import { isInputEmpty } from "@/db/basicValidation";
 
-export default function EditEntry() {
-  const db = useSQLiteContext();
-  const entriesDb = drizzle(db);
-  const [entry, setEntry] = useState<schema.Entry>();
+export default function AddEntry() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const { entryId } = useLocalSearchParams();
+  const plainDate = new Date().toISOString();
+  const date = formatDate(plainDate);
+  const db = useSQLiteContext();
+  const entriesDb = drizzle(db);
   const opacity = useSharedValue(1);
 
   const isSaveDisabled = !title.trim() && !description.trim();
@@ -30,33 +29,18 @@ export default function EditEntry() {
     opacity.value = withTiming(1, { duration: 150 });
   };
 
-  useEffect(() => {
-    const fetchEntry = async () => {
-      try {
-        const data = await getEntry(entriesDb, Number(entryId));
-        setEntry(data);
-        setTitle(data.title);
-        setDescription(data.description);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchEntry();
-  }, []);
-
-  const editEntry = async () => {
+  const saveEntry = async () => {
     try {
-      const updatedEntry = {
-        id: entry?.id,
+      const newEntry = {
         title: isInputEmpty(title) ? "Entry without title" : title,
         description: isInputEmpty(description)
           ? "Entry without description"
           : description,
-        date: new Date().toISOString(),
+        date: plainDate,
       };
-      const { success } = await updateEntry(entriesDb, updatedEntry);
-      if (success) {
-        console.log("Entry updated successfully");
+      const result = await addEntry(entriesDb, newEntry);
+      if (result.success) {
+        console.log("Entry added successfully");
       }
     } catch (error) {
       console.log(error);
@@ -67,7 +51,7 @@ export default function EditEntry() {
     <Screen>
       <Stack.Screen
         options={{
-          headerTitle: `Edit: ${title}`,
+          headerTitle: `Entry: ${title}`,
           headerRight: () => <View />,
         }}
       />
@@ -79,22 +63,16 @@ export default function EditEntry() {
         />
         <EntryInput
           value={description}
+          onChangeText={(newDescription) => setDescription(newDescription)}
           placeholder="Entry Description"
           multiline={true}
           height={180}
-          onChangeText={(newDescription) => setDescription(newDescription)}
         />
-        <EntryInput
-          value={formatDate(entry?.date ?? "")}
-          placeholder="Entry Date"
-          editable={false}
-        />
+        <EntryInput value={date} placeholder="Entry Date" editable={false} />
         <Pressable
-          onPress={() => {
-            editEntry();
-          }}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
+          onPress={() => saveEntry()}
           disabled={isSaveDisabled}
         >
           <Animated.View

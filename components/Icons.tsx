@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { ComponentProps } from "react";
 
 type IconProps = ComponentProps<typeof MaterialCommunityIcons>;
@@ -16,5 +16,9 @@ export const DeleteIcon = ({ name, ...props }: IconProps) => {
 };
 
 export const AddIcon = ({ name, ...props }: IconProps) => {
+  return <MaterialCommunityIcons name={name} {...props} />;
+};
+
+export const HappyIcon = ({ name, ...props }: IconProps) => {
   return <MaterialCommunityIcons name={name} {...props} />;
 };
